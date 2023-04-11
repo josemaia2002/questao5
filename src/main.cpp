@@ -1,36 +1,47 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <math.h>
 
 using namespace std;
 
-int findSum(vector<int>& v, int x){
-    int soma = 0;
-    int i = 0;
+// Funcao para converter de decimal para binario
+std::vector<bool> toBinary(int decimal, int size){
+    std::vector<bool> binary;
 
-    for(int i = 0; i < v.size() -1; i++){
-        soma += v[i];
+    if(decimal == 0){
+        binary.push_back(0);
+    }
 
-        if(soma == x)
+    else{
+        while(decimal > 0){
+            binary.push_back(decimal%2);
+            decimal = decimal / 2;
+        }
+    }
+    while(binary.size() != size)
+        binary.push_back(0);
+
+    std::reverse(binary.begin(), binary.end());
+
+    return binary;
+}
+
+// Funcao para calcular as combinacoes
+int findSum(std::vector<int>& v, int target){
+    for(int i = 0; i < (int)pow(2, v.size()); i++){
+        std::vector<bool> b = toBinary(i, v.size());
+        int soma = 0;
+        for(int j = 0; j < v.size(); j++){
+            if(b[j] == 1){
+                soma += v[j];
+            }
+        }
+        if(soma == target)
             return 1;
-        else if(soma > x)
-            soma -= v[i];
     }
 
-    for(int i = 0; i < v.size() -1; i++){
-        soma += v[i];
-        for(j = 1; j < v.size(); j++){
-            soma += v[j];
-        }        
-    }
-
-
-    for(i = 0; i < v.size(); i++){
-        soma += v[i];
-        if(soma == x)
-            return 1;
-        else if(soma > x)
-            break;
-    }
+    return 0;
 }
 
 int main(){    
@@ -50,11 +61,6 @@ int main(){
         cout << "Sim" << endl;
     else
         cout << "Nao" << endl;
-            
-
-    for(i = 0; i < v1.size(); i++)
-        cout << v1[i] << endl;
-
 
     return 0;
 }
